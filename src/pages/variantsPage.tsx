@@ -25,13 +25,13 @@ const VariantsPage: React.FC = () => {
       
       // Fetch product details
       const productResponse = await productAPI.getById(id);
-      if (productResponse.data.success) {
+      if (productResponse?.data?.success && productResponse.data.data) {
         setProduct(productResponse.data.data);
       }
       
       // Fetch variants
       const variantsResponse = await variantAPI.getByProductId(id);
-      if (variantsResponse.data.success) {
+      if (variantsResponse?.data?.success && variantsResponse.data.data) {
         const allVariants = variantsResponse.data.data;
         setVariants(allVariants);
         

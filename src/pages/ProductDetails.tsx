@@ -10,7 +10,7 @@ const ProductDetail: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
   const [isZoomed, setIsZoomed] = useState<boolean>(false);
-  const [zoomPosition, setZoomPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [zoomPosition , setZoomPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const imageRef = useRef<HTMLImageElement>(null);
   const zoomContainerRef = useRef<HTMLDivElement>(null);
 
@@ -21,21 +21,24 @@ const ProductDetail: React.FC = () => {
   }, [variantId]);
 
   const fetchVariant = async (id: number): Promise<void> => {
-    try {
-      setLoading(true);
-      const response = await variantAPI.getById(id);
-      if (response.data.success) {
-        setVariant(response.data.data);
-      } else {
-        setError('Variant not found');
-      }
-    } catch (err) {
-      setError('Failed to fetch variant details');
-      console.error('Error:', err);
-    } finally {
-      setLoading(false);
+  try {
+    setLoading(true);
+    const response = await variantAPI.getById(id);
+
+    // Optional chaining to stay safe
+    if (response.data?.success && response.data.data) {
+      setVariant(response.data.data);
+    } else {
+      setError(response.data?.message || 'Variant not found');
     }
-  };
+  } catch (err) {
+    setError('Failed to fetch variant details');
+    console.error('Error:', err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleBackClick = (): void => {
     navigate(-1);

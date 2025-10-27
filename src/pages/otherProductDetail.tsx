@@ -21,7 +21,7 @@ const OtherProductDetail: React.FC = () => {
     try {
       setLoading(true);
       const response = await productAPI.getById(id);
-      if (response.data.success) {
+      if (response.data?.success && response.data?.data) {
         setProduct(response.data.data);
       } else {
         setError('Product not found');

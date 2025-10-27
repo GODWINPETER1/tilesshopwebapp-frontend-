@@ -45,13 +45,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
           {product.name}
         </h3>
-        <p
+        {/* <p
           className={`text-sm font-medium ${
-            product.inStock ? 'text-green-600' : 'text-red-500'
+            product. ? 'text-green-600' : 'text-red-500'
           }`}
         >
           {product.inStock ? 'In Stock' : 'Out of Stock'}
-        </p>
+        </p> */}
       </div>
     </motion.div>
   );

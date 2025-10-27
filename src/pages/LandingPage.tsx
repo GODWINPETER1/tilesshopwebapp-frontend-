@@ -21,12 +21,12 @@ const LandingPage: React.FC = () => {
       // Fetch tiles products
       const tilesResponse = await productAPI.getByCategory('tiles');
       if (tilesResponse.data.success) {
-        setTilesProducts(tilesResponse.data.data);
+        setTilesProducts(tilesResponse.data.data ?? []);
       }
       
       // Fetch other products (all non-tiles)
       const otherResponse = await productAPI.getAll();
-      if (otherResponse.data.success) {
+      if (otherResponse.data?.success && otherResponse.data.data) {
         const otherProductsData = otherResponse.data.data.filter(
           (product: Product) => product.category !== 'tiles'
         );

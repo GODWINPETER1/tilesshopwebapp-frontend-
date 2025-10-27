@@ -9,6 +9,7 @@ export interface Product {
   description: string;
   category: string; 
   variants?: Variant[];
+
 }
 
 export interface Variant {
@@ -31,7 +32,7 @@ export interface Variant {
 export interface ApiResponse<T> {
   success: boolean;
   message?: string;
-  data: T;
+  data?: T;
   error?: string;
 }
 

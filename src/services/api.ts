@@ -1,12 +1,10 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { Product, Variant, ApiResponse } from '../types';
 
-// Vite uses import.meta.env for environment variables
-const API_BASE_URL = import.meta.env.PROD 
-  ? import.meta.env.VITE_API_URL || 'https://your-backend-app.railway.app/api'
-  : 'http://localhost:5000/api';
+// Use VITE_API_URL from environment variables
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-console.log('API Base URL:', API_BASE_URL); // For debugging
+console.log('API Base URL:', API_BASE_URL); // Debugging
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -20,7 +18,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     if (import.meta.env.DEV) {
-      console.log(`Making ${config.method?.toUpperCase()} request to: ${config.url}`);
+      console.log(`Request: ${config.method?.toUpperCase()} ${config.url}`);
     }
     return config;
   },
@@ -50,57 +48,26 @@ api.interceptors.response.use(
 
 // Products API
 export const productAPI = {
-  getAll: (): Promise<ApiResponse<Product[]>> => 
-    api.get('/products'),
-  
-  getById: (id: number): Promise<ApiResponse<Product>> => 
-    api.get(`/products/${id}`),
-  
-  getByCategory: (category: string): Promise<ApiResponse<Product[]>> => 
-    api.get(`/products/category/${category}`),
-  
-  create: (formData: FormData): Promise<ApiResponse<{ id: number }>> => 
-    api.post('/products', formData, {
-      headers: { 
-        'Content-Type': 'multipart/form-data',
-      }
-    }),
-  
-  update: (id: number, formData: FormData): Promise<ApiResponse<void>> => 
-    api.put(`/products/${id}`, formData, {
-      headers: { 
-        'Content-Type': 'multipart/form-data',
-      }
-    }),
-  
-  delete: (id: number): Promise<ApiResponse<void>> => 
-    api.delete(`/products/${id}`)
+  getAll: (): Promise<AxiosResponse<ApiResponse<Product[]>>> => api.get('/products'),
+  getById: (id: number): Promise<AxiosResponse<ApiResponse<Product>>> => api.get(`/products/${id}`),
+  getByCategory: (category: string): Promise<AxiosResponse<ApiResponse<Product[]>>> => api.get(`/products/category/${category}`),
+  create: (formData: FormData): Promise<AxiosResponse<ApiResponse<{ id: number }>>> =>
+    api.post('/products', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  update: (id: number, formData: FormData): Promise<AxiosResponse<ApiResponse<void>>> =>
+    api.put(`/products/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  delete: (id: number): Promise<AxiosResponse<ApiResponse<void>>> => api.delete(`/products/${id}`),
 };
 
 // Variants API
 export const variantAPI = {
-  getByProductId: (productId: number): Promise<ApiResponse<Variant[]>> => 
+  getByProductId: (productId: number): Promise<AxiosResponse<ApiResponse<Variant[]>>> => 
     api.get(`/variants/product/${productId}`),
-  
-  getById: (id: number): Promise<ApiResponse<Variant>> => 
-    api.get(`/variants/${id}`),
-  
-  create: (formData: FormData): Promise<ApiResponse<{ id: number }>> => 
-    api.post('/variants', formData, {
-      headers: { 
-        'Content-Type': 'multipart/form-data',
-      }
-    }),
-  
-  update: (id: number, formData: FormData): Promise<ApiResponse<void>> => 
-    api.put(`/variants/${id}`, formData, {
-      headers: { 
-        'Content-Type': 'multipart/form-data',
-      }
-    }),
-  
-  delete: (id: number): Promise<ApiResponse<void>> => 
-    api.delete(`/variants/${id}`)
+  getById: (id: number): Promise<AxiosResponse<ApiResponse<Variant>>> => api.get(`/variants/${id}`),
+  create: (formData: FormData): Promise<AxiosResponse<ApiResponse<{ id: number }>>> =>
+    api.post('/variants', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  update: (id: number, formData: FormData): Promise<AxiosResponse<ApiResponse<void>>> =>
+    api.put(`/variants/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  delete: (id: number): Promise<AxiosResponse<ApiResponse<void>>> => api.delete(`/variants/${id}`),
 };
 
 export default api;

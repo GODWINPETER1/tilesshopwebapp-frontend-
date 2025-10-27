@@ -18,7 +18,7 @@ const ManageProducts: React.FC = () => {
     try {
       setLoading(true);
       const response = await productAPI.getAll();
-      if (response.data.success) {
+      if (response.data?.success && response.data?.data) {
         setProducts(response.data.data);
       }
     } catch (err) {
