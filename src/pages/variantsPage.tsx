@@ -239,7 +239,7 @@ const VariantsPage: React.FC = () => {
                       <span className="font-medium">kg/Ctn:</span> {variant.kgPerCtn}
                     </p> */}
                     <p className={`text-sm ${variant.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      <span className="font-medium">Stock:</span> {variant.stock > 0 ? `${variant.stock} in stock` : 'Out of stock'}
+                      <span className="font-medium">Stock:</span> {variant.stock > 0 ? `in stock` : 'Out of stock'}
                     </p>
                   </div>
                 </div>
