@@ -85,24 +85,24 @@ const LandingPage: React.FC = () => {
       </div>
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+          {/* <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
             {product.name}
-          </h3>
-          <span className="bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full capitalize">
+          </h3> */}
+          {/* <span className="bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full capitalize">
             {product.category}
-          </span>
+          </span> */}
         </div>
         <p className="text-gray-600 dark:text-gray-300 text-sm mb-1">
           {product.brand}
         </p>
-        <p className="text-gray-500 dark:text-gray-400 text-sm">
+        {/* <p className="text-gray-500 dark:text-gray-400 text-sm">
           {product.series}
-        </p>
-        {product.category !== 'tiles' && product.description && (
+        </p> */}
+        {/* {product.category !== 'tiles' && product.description && (
           <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 line-clamp-2">
             {product.description}
           </p>
-        )}
+        )} */}
       </div>
     </div>
   );
