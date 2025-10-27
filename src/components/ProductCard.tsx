@@ -11,16 +11,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const navigate = useNavigate();
 
   const getImageUrl = (imagePath?: string | null) => {
-    if (!imagePath) return 'https://via.placeholder.com/400x400?text=No+Image';
-    if (imagePath.startsWith('http')) return imagePath;
-    
-    if (import.meta.env.PROD) {
-      const backendUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://your-backend-app.railway.app';
-      return `${backendUrl}${imagePath}`;
-    }
-    
-    return `http://localhost:5000${imagePath}`;
-  };
+  if (!imagePath) return 'https://via.placeholder.com/400x400?text=No+Image';
+  if (imagePath.startsWith('http')) return imagePath;
+
+  if (import.meta.env.PROD) {
+    // Remove /api from backend URL
+    const backendUrl = import.meta.env.VITE_API_URL.replace(/\/api$/, '');
+    return `${backendUrl}${imagePath}`;
+  }
+
+  return `http://localhost:5000${imagePath}`;
+};
+
 
   return (
     <motion.div
