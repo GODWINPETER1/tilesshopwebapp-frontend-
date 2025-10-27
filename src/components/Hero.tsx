@@ -17,7 +17,10 @@ const Hero: React.FC = () => {
   }, []);
 
   return (
-    <section className="relative h-[90vh] flex items-center justify-center overflow-hidden transition-all duration-700">
+    <section
+      className="relative min-h-[85vh] md:h-[90vh] flex items-center justify-center overflow-hidden transition-all duration-700 pt-24 md:pt-32"
+      // 🟢 Added top padding to prevent header overlap (pt-24 for phones, pt-32 for larger)
+    >
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-center bg-cover transition-opacity duration-1000"
@@ -26,23 +29,23 @@ const Hero: React.FC = () => {
         }}
       ></div>
 
-      {/* Lighter Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40"></div>
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50"></div>
 
       {/* Content */}
-      <div className="relative z-10 text-center px-6 max-w-2xl">
-        <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 drop-shadow-md">
+      <div className="relative z-10 text-center px-4 sm:px-6 max-w-2xl">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-white mb-5 drop-shadow-lg leading-tight">
           Beautiful Tiles for Every Space
         </h1>
-        <p className="text-xl text-gray-100 mb-8">
-          Discover our premium collection of ceramic, porcelain, and natural stone tiles. 
+        <p className="text-base sm:text-lg md:text-xl text-gray-100 mb-8">
+          Discover our premium collection of ceramic, porcelain, and natural stone tiles.
           Transform your space with quality and style.
         </p>
-        <div className="flex justify-center space-x-4">
-          <button className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 rounded-lg transition-colors">
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <button className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 rounded-lg transition-colors text-sm sm:text-base">
             View Products
           </button>
-          <button className="border-2 border-primary-500 text-white hover:bg-primary-500 hover:text-white px-8 py-3 rounded-lg transition-colors">
+          <button className="border-2 border-primary-500 text-white hover:bg-primary-500 hover:text-white px-8 py-3 rounded-lg transition-colors text-sm sm:text-base">
             Get Inspired
           </button>
         </div>
