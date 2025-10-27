@@ -15,35 +15,35 @@ const ManageVariants: React.FC = () => {
   }, []);
 
   const fetchData = async (): Promise<void> => {
-    try {
-      setLoading(true);
-      
-      // Fetch products for the dropdown
-      const productsResponse = await productAPI.getAll();
-      if (productsResponse.data.success) {
-        setProducts(productsResponse.data.data);
-      }
+  try {
+    setLoading(true);
 
-      // We need to fetch variants for each product
-      const allVariants: Variant[] = [];
-      for (const product of productsResponse.data.data) {
-        try {
-          const variantsResponse = await variantAPI.getByProductId(product.id);
-          if (variantsResponse.data.success) {
-            allVariants.push(...variantsResponse.data.data);
-          }
-        } catch (err) {
-          console.error(`Error fetching variants for product ${product.id}:`, err);
+    // Fetch products
+    const productsResponse = await productAPI.getAll();
+    const fetchedProducts = productsResponse.data?.data ?? [];
+    setProducts(fetchedProducts); // always an array
+
+    // Fetch variants for each product
+    const allVariants: Variant[] = [];
+    for (const product of fetchedProducts) {
+      try {
+        const variantsResponse = await variantAPI.getByProductId(product.id);
+        if (variantsResponse.data.success) {
+          allVariants.push(...(variantsResponse.data.data ?? []));
         }
+      } catch (err) {
+        console.error(`Error fetching variants for product ${product.id}:`, err);
       }
-      
-      setVariants(allVariants);
-    } catch (err) {
-      console.error('Error fetching data:', err);
-    } finally {
-      setLoading(false);
     }
-  };
+
+    setVariants(allVariants);
+  } catch (err) {
+    console.error('Error fetching data:', err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleCreate = (): void => {
     setEditingVariant(null);

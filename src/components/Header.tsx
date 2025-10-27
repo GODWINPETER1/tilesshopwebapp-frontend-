@@ -1,8 +1,8 @@
 import React from 'react';
-import { useTheme } from '../contexts/ThemeContext';
+
 
 const Header: React.FC = () => {
-  const { theme, toggleTheme } = useTheme();
+  
 
   return (
     <header className="bg-white fixed top-0 left-0 right-0 z-50 dark:bg-gray-900 shadow-lg transition-colors duration-300">
@@ -35,11 +35,11 @@ const Header: React.FC = () => {
           <div className="flex items-center space-x-4">
             {/* Theme Toggle */}
             <button
-              onClick={toggleTheme}
+              
               className="p-3 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
               aria-label="Toggle theme"
             >
-              {theme === 'light' ? '🌙' : '☀️'}
+              
             </button>
           </div>
         </div>

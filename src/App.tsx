@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider } from './contexts/ThemeContext';
+
 
 // Components
 import Header from './components/Header';
@@ -32,7 +32,7 @@ function Home() {
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider>
+   
       <Router>
         <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
           <Routes>
@@ -45,7 +45,7 @@ const App: React.FC = () => {
           </Routes>
         </div>
       </Router>
-    </ThemeProvider>
+  
   );
 }
 
