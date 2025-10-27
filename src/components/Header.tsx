@@ -16,7 +16,7 @@ const Header: React.FC = () => {
           <img
             src={headLogo}
             alt="TileCraft Logo"
-            className="w-25 h-25 object-contain cursor-pointer hover:scale-105 transition-transform duration-300"
+            className="w-20 h-20 object-contain cursor-pointer hover:scale-105 transition-transform duration-300"
           />
         </div>
 
