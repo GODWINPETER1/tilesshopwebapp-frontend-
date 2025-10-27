@@ -1,11 +1,52 @@
 import axios from 'axios';
 import { Product, Variant, ApiResponse } from '../types';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+// Vite uses import.meta.env for environment variables
+const API_BASE_URL = import.meta.env.PROD 
+  ? import.meta.env.VITE_API_URL || 'https://your-backend-app.railway.app/api'
+  : 'http://localhost:5000/api';
+
+console.log('API Base URL:', API_BASE_URL); // For debugging
 
 const api = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
+
+// Request interceptor for logging
+api.interceptors.request.use(
+  (config) => {
+    if (import.meta.env.DEV) {
+      console.log(`Making ${config.method?.toUpperCase()} request to: ${config.url}`);
+    }
+    return config;
+  },
+  (error) => {
+    console.error('Request error:', error);
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor for error handling
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error('API Error:', error.response?.data || error.message);
+    
+    if (error.code === 'ECONNREFUSED') {
+      console.error('Backend server is not running or not accessible');
+    }
+    
+    if (error.response?.status === 404) {
+      console.error('API endpoint not found');
+    }
+    
+    return Promise.reject(error);
+  }
+);
 
 // Products API
 export const productAPI = {
@@ -15,18 +56,21 @@ export const productAPI = {
   getById: (id: number): Promise<ApiResponse<Product>> => 
     api.get(`/products/${id}`),
   
-  // Add this new method
   getByCategory: (category: string): Promise<ApiResponse<Product[]>> => 
     api.get(`/products/category/${category}`),
   
   create: (formData: FormData): Promise<ApiResponse<{ id: number }>> => 
     api.post('/products', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+      headers: { 
+        'Content-Type': 'multipart/form-data',
+      }
     }),
   
   update: (id: number, formData: FormData): Promise<ApiResponse<void>> => 
     api.put(`/products/${id}`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+      headers: { 
+        'Content-Type': 'multipart/form-data',
+      }
     }),
   
   delete: (id: number): Promise<ApiResponse<void>> => 
@@ -43,12 +87,16 @@ export const variantAPI = {
   
   create: (formData: FormData): Promise<ApiResponse<{ id: number }>> => 
     api.post('/variants', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+      headers: { 
+        'Content-Type': 'multipart/form-data',
+      }
     }),
   
   update: (id: number, formData: FormData): Promise<ApiResponse<void>> => 
     api.put(`/variants/${id}`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+      headers: { 
+        'Content-Type': 'multipart/form-data',
+      }
     }),
   
   delete: (id: number): Promise<ApiResponse<void>> => 
