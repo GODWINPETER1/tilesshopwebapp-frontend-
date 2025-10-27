@@ -68,11 +68,21 @@ const ProductDetail: React.FC = () => {
     image.style.transformOrigin = `${x}% ${y}%`;
   };
 
+  const getImageUrl = (imagePath?: string | null) => {
+  if (!imagePath) return 'https://via.placeholder.com/400x400?text=No+Image';
+  if (imagePath.startsWith('http')) return imagePath;
+
+  // Remove '/api' from backend URL if your images are served at /uploads
+  const backendUrl = import.meta.env.VITE_API_URL.replace(/\/api$/, '');
+  return `${backendUrl}${imagePath}`;
+};
+
+
   const handleDownloadImage = async (): Promise<void> => {
     if (!variant?.image) return;
 
     try {
-      const imageUrl = `http://localhost:5000${variant.image}`;
+      const imageUrl = `${getImageUrl(variant.image)}`;
       const response = await fetch(imageUrl);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -195,7 +205,7 @@ const ProductDetail: React.FC = () => {
                 {variant.image ? (
                   <>
                     <img
-                      src={`http://localhost:5000${variant.image}`}
+                      src={getImageUrl(variant.image)}
                       alt={`${variant.size}`}
                       className="h-full w-full object-cover cursor-zoom-in transition-transform duration-200 hover:scale-105"
                       onClick={handleImageClick}

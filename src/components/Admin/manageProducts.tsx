@@ -39,6 +39,16 @@ const ManageProducts: React.FC = () => {
     setShowForm(true);
   };
 
+  const getImageUrl = (imagePath?: string | null) => {
+  if (!imagePath) return 'https://via.placeholder.com/400x400?text=No+Image';
+  if (imagePath.startsWith('http')) return imagePath;
+
+  // Remove '/api' from backend URL if your images are served at /uploads
+  const backendUrl = import.meta.env.VITE_API_URL.replace(/\/api$/, '');
+  return `${backendUrl}${imagePath}`;
+};
+
+
   const handleDelete = async (productId: number): Promise<void> => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
@@ -123,7 +133,7 @@ const ManageProducts: React.FC = () => {
               <div className="h-48 bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
                 {product.image ? (
                   <img
-                    src={`http://localhost:5000${product.image}`}
+                    src={getImageUrl(product.image)}
                     alt={product.name}
                     className="h-full w-full object-cover"
                     onError={(e) => {

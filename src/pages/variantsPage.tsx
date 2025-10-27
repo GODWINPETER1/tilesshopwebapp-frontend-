@@ -47,6 +47,15 @@ const VariantsPage: React.FC = () => {
     }
   };
 
+  const getImageUrl = (imagePath?: string | null) => {
+  if (!imagePath) return 'https://via.placeholder.com/400x400?text=No+Image';
+  if (imagePath.startsWith('http')) return imagePath;
+
+  // Use backend URL from environment
+  const backendUrl = import.meta.env.VITE_API_URL.replace(/\/api$/, '');
+  return `${backendUrl}${imagePath}`;
+};
+
   const handleVariantClick = (variantId: number): void => {
     navigate(`/product/${variantId}`);
   };
@@ -200,7 +209,7 @@ const VariantsPage: React.FC = () => {
                 <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                   {variant.image ? (
                     <img
-                      src={`http://localhost:5000${variant.image}`}
+                      src={getImageUrl(variant.image)}
                       alt={`${variant.size}`}
                       className="h-full w-full object-cover"
                       onError={(e) => {
