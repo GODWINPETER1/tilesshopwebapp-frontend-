@@ -265,9 +265,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose, onSuccess }
               required
             >
               <option value="tiles">Tiles</option>
-              <option value="tools">Tools</option>
-              <option value="accessories">Accessories</option>
-              <option value="materials">Materials</option>
+
               <option value="other">Other</option>
             </select>
             {errors.category && <p className="mt-1 text-sm text-red-600">{errors.category}</p>}
