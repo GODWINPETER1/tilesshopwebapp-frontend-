@@ -249,10 +249,10 @@ const ProductDetail: React.FC = () => {
               <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <h3 className="font-semibold text-gray-700 dark:text-gray-300 mb-2">Product Information</h3>
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
+                  {/* <div className="flex justify-between">
                     <span className="font-medium text-gray-600 dark:text-gray-400">Brand:</span>
-                    <span className="text-gray-800 dark:text-white">{variant.brand}</span>
-                  </div>
+                    <span className="text-gray-800 dark:text-white">{variant.}</span>
+                  </div> */}
                   <div className="flex justify-between">
                     <span className="font-medium text-gray-600 dark:text-gray-400">Series:</span>
                     <span className="text-gray-800 dark:text-white">{variant.series}</span>

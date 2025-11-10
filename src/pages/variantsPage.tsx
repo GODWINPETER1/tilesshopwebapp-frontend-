@@ -133,14 +133,14 @@ const VariantsPage: React.FC = () => {
               <span className="font-semibold text-gray-600 dark:text-gray-300">Brand:</span>
               <span className="ml-2 text-gray-800 dark:text-white">{product.brand}</span>
             </div>
-            <div>
+            {/* <div>
               <span className="font-semibold text-gray-600 dark:text-gray-300">Series:</span>
               <span className="ml-2 text-gray-800 dark:text-white">{product.series}</span>
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <span className="font-semibold text-gray-600 dark:text-gray-300">Code:</span>
               <span className="ml-2 text-gray-800 dark:text-white">{product.code}</span>
-            </div>
+            </div> */}
           </div>
           {product.description && (
             <p className="mt-4 text-gray-500 dark:text-gray-400">

@@ -164,15 +164,15 @@ const OtherProductDetail: React.FC = () => {
                   <span className="text-gray-600 dark:text-gray-400">{product.brand}</span>
                 </div>
                 
-                <div className="flex justify-between border-b border-gray-200 dark:border-gray-600 pb-2">
+                {/* <div className="flex justify-between border-b border-gray-200 dark:border-gray-600 pb-2">
                   <span className="font-semibold text-gray-700 dark:text-gray-300">Series:</span>
                   <span className="text-gray-600 dark:text-gray-400">{product.series}</span>
-                </div>
+                </div> */}
                 
-                <div className="flex justify-between border-b border-gray-200 dark:border-gray-600 pb-2">
+                {/* <div className="flex justify-between border-b border-gray-200 dark:border-gray-600 pb-2">
                   <span className="font-semibold text-gray-700 dark:text-gray-300">Code:</span>
                   <span className="text-gray-600 dark:text-gray-400">{product.code}</span>
-                </div>
+                </div> */}
               </div>
 
               {product.description && (
