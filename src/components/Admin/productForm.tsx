@@ -112,7 +112,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose, onSuccess }
       formDataToSend.append('description', formData.description);
       formDataToSend.append('category', formData.category);
       if (formData.mainImage) {
-        formDataToSend.append('image', formData.mainImage); // Changed from 'mainImage' to 'image'
+        formDataToSend.append('mainImage', formData.mainImage); // Changed from 'mainImage' to 'image'
       }
 
       if (product) {
