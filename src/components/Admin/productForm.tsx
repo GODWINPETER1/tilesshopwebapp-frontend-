@@ -222,9 +222,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose, onSuccess }
               required
             >
               <option value="tiles">Tiles</option>
-              <option value="bathroom">Bathroom Tiles</option>
-              <option value="kitchen">Kitchen Tiles</option>
-              <option value="outdoor">Outdoor Tiles</option>
               <option value="other">Other</option>
             </select>
             {errors.category && <p className="mt-1 text-sm text-red-600">{errors.category}</p>}
