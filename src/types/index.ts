@@ -1,25 +1,19 @@
-// Product and Variant types
+// Product and Variant types - UPDATED FOR NEW STRUCTURE
 export interface Product {
   id: number;
   name: string;
   brand: string;
-  series: string;
-  code: string;
   image: string | null;
   description: string;
   category: string; 
-  variants?: Variant[];
-
+  variants?: Variant[]; // Variants now contain series and code
 }
 
 export interface Variant {
   id: number;
   productId: number;
-  // Inherited from product
-  brand: string;
   series: string;
   code: string;
-  // Variant specific fields
   size: string;
   pcsPerCtn: number;
   m2PerCtn: number;
@@ -36,19 +30,20 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
-// Form Data types
+// Form Data types - UPDATED
 export interface ProductFormData {
   name: string;
   brand: string;
-  series: string;
-  code: string;
   description: string;
-  category: string
+  category: string;
   mainImage?: File | null;
+  // REMOVED: series and code (now in variants)
 }
 
 export interface VariantFormData {
   product_id: string;
+  series: string; // ADDED: series now in variant
+  code: string;   // ADDED: code now in variant
   size: string;
   pcs_per_ctn: string;
   m2_per_ctn: string;
@@ -58,17 +53,6 @@ export interface VariantFormData {
 }
 
 // Admin types
-export interface ProductFormData {
-  name: string;
-  brand: string;
-  series: string;
-  code: string;
-  description: string;
-  mainImage?: File | null;
-}
-
-
-
 export interface AdminProduct extends Product {
   created_at?: string;
   updated_at?: string;

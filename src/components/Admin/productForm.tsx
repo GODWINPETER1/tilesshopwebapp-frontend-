@@ -11,19 +11,16 @@ interface ProductFormProps {
 interface FormData {
   name: string;
   brand: string;
-  series: string;
-  code: string;
   description: string;
   category: string;
   mainImage: File | null;
+  // REMOVED: series and code
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({ product, onClose, onSuccess }) => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     brand: '',
-    series: '',
-    code: '',
     description: '',
     category: 'tiles', // Default category
     mainImage: null
@@ -37,14 +34,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose, onSuccess }
       setFormData({
         name: product.name || '',
         brand: product.brand || '',
-        series: product.series || '',
-        code: product.code || '',
         description: product.description || '',
-        category: product.category || 'tiles', // Set existing category or default
+        category: product.category || 'tiles',
         mainImage: null
       });
       if (product.image) {
-        setImagePreview(`http://localhost:5000${product.image}`);
+        const backendUrl = import.meta.env.VITE_API_URL?.replace(/\/api$/, '') || 'http://localhost:5000';
+        setImagePreview(`${backendUrl}${product.image}`);
       }
     }
   }, [product]);
@@ -92,9 +88,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose, onSuccess }
     if (!formData.brand.trim()) {
       newErrors.brand = 'Brand is required';
     }
-    if (!formData.code.trim()) {
-      newErrors.code = 'Product code is required';
-    }
     if (!formData.category.trim()) {
       newErrors.category = 'Category is required';
     }
@@ -116,12 +109,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose, onSuccess }
       const formDataToSend = new FormData();
       formDataToSend.append('name', formData.name);
       formDataToSend.append('brand', formData.brand);
-      formDataToSend.append('series', formData.series);
-      formDataToSend.append('code', formData.code);
       formDataToSend.append('description', formData.description);
       formDataToSend.append('category', formData.category);
       if (formData.mainImage) {
-        formDataToSend.append('mainImage', formData.mainImage);
+        formDataToSend.append('image', formData.mainImage); // Changed from 'mainImage' to 'image'
       }
 
       if (product) {
@@ -180,60 +171,26 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose, onSuccess }
             {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
           </div>
 
-          {/* Brand and Series */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="brand" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Brand *
-              </label>
-              <input
-                type="text"
-                id="brand"
-                name="brand"
-                value={formData.brand}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-                  errors.brand ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="Enter brand"
-              />
-              {errors.brand && <p className="mt-1 text-sm text-red-600">{errors.brand}</p>}
-            </div>
-            <div>
-              <label htmlFor="series" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Series
-              </label>
-              <input
-                type="text"
-                id="series"
-                name="series"
-                value={formData.series}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                placeholder="Enter series"
-              />
-            </div>
-          </div>
-
-          {/* Code and Description */}
+          {/* Brand */}
           <div>
-            <label htmlFor="code" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Product Code *
+            <label htmlFor="brand" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Brand *
             </label>
             <input
               type="text"
-              id="code"
-              name="code"
-              value={formData.code}
+              id="brand"
+              name="brand"
+              value={formData.brand}
               onChange={handleChange}
               className={`w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-                errors.code ? 'border-red-500' : 'border-gray-300'
+                errors.brand ? 'border-red-500' : 'border-gray-300'
               }`}
-              placeholder="Enter product code"
+              placeholder="Enter brand"
             />
-            {errors.code && <p className="mt-1 text-sm text-red-600">{errors.code}</p>}
+            {errors.brand && <p className="mt-1 text-sm text-red-600">{errors.brand}</p>}
           </div>
 
+          {/* Description */}
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Description
@@ -265,6 +222,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose, onSuccess }
               required
             >
               <option value="tiles">Tiles</option>
+              <option value="bathroom">Bathroom Tiles</option>
+              <option value="kitchen">Kitchen Tiles</option>
+              <option value="outdoor">Outdoor Tiles</option>
               <option value="other">Other</option>
             </select>
             {errors.category && <p className="mt-1 text-sm text-red-600">{errors.category}</p>}
@@ -278,6 +238,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose, onSuccess }
             <input
               type="file"
               id="mainImage"
+              name="mainImage"
               accept="image/*"
               onChange={handleFileChange}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
@@ -292,6 +253,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onClose, onSuccess }
                 />
               </div>
             )}
+          </div>
+
+          {/* Info Note */}
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <p className="text-sm text-blue-700 dark:text-blue-300">
+              <strong>Note:</strong> Series and product codes are now added at the variant level. 
+              After creating this product, you can add variants with specific sizes, series, and codes.
+            </p>
           </div>
 
           {/* Actions */}

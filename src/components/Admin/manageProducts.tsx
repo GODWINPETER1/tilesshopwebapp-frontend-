@@ -17,6 +17,7 @@ const ManageProducts: React.FC = () => {
   const fetchProducts = async (): Promise<void> => {
     try {
       setLoading(true);
+      setError('');
       const response = await productAPI.getAll();
       if (response.data?.success && response.data?.data) {
         setProducts(response.data.data);
@@ -40,14 +41,13 @@ const ManageProducts: React.FC = () => {
   };
 
   const getImageUrl = (imagePath?: string | null) => {
-  if (!imagePath) return 'https://via.placeholder.com/400x400?text=No+Image';
-  if (imagePath.startsWith('http')) return imagePath;
+    if (!imagePath) return 'https://via.placeholder.com/400x400?text=No+Image';
+    if (imagePath.startsWith('http')) return imagePath;
 
-  // Remove '/api' from backend URL if your images are served at /uploads
-  const backendUrl = import.meta.env.VITE_API_URL.replace(/\/api$/, '');
-  return `${backendUrl}${imagePath}`;
-};
-
+    // Remove '/api' from backend URL if your images are served at /uploads
+    const backendUrl = import.meta.env.VITE_API_URL?.replace(/\/api$/, '') || 'http://localhost:5000';
+    return `${backendUrl}${imagePath}`;
+  };
 
   const handleDelete = async (productId: number): Promise<void> => {
     if (window.confirm('Are you sure you want to delete this product?')) {
@@ -77,6 +77,7 @@ const ManageProducts: React.FC = () => {
     return (
       <div className="flex justify-center items-center py-12">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <span className="ml-4 text-gray-600 dark:text-gray-300">Loading products...</span>
       </div>
     );
   }
@@ -104,6 +105,12 @@ const ManageProducts: React.FC = () => {
       {error && (
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
           <p className="text-red-600 dark:text-red-400">{error}</p>
+          <button 
+            onClick={fetchProducts}
+            className="mt-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm"
+          >
+            Retry
+          </button>
         </div>
       )}
 
@@ -137,7 +144,7 @@ const ManageProducts: React.FC = () => {
                     alt={product.name}
                     className="h-full w-full object-cover"
                     onError={(e) => {
-                      e.currentTarget.src = '/api/placeholder/300/200';
+                      e.currentTarget.src = 'https://via.placeholder.com/300x200?text=Image+Not+Found';
                     }}
                   />
                 ) : (
@@ -159,11 +166,26 @@ const ManageProducts: React.FC = () => {
                     <span className="font-medium">Brand:</span> {product.brand}
                   </p>
                   <p className="text-gray-600 dark:text-gray-300">
-                    <span className="font-medium">Series:</span> {product.series}
+                    <span className="font-medium">Category:</span> {product.category || 'tiles'}
                   </p>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    <span className="font-medium">Code:</span> {product.code}
-                  </p>
+                  
+                  {/* Show variant info if available */}
+                  {product.variants && product.variants.length > 0 && (
+                    <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-600">
+                      <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Variants:</p>
+                      {product.variants.slice(0, 2).map((variant, index) => (
+                        <div key={index} className="text-xs text-gray-500 dark:text-gray-400">
+                          • {variant.size} - {variant.code}
+                        </div>
+                      ))}
+                      {product.variants.length > 2 && (
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          +{product.variants.length - 2} more variants
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
                   {product.description && (
                     <p className="text-gray-500 dark:text-gray-400 truncate">
                       {product.description}

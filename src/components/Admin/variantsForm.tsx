@@ -11,6 +11,8 @@ interface VariantFormProps {
 
 interface FormData {
   product_id: string;
+  series: string;
+  code: string;
   size: string;
   pcs_per_ctn: string;
   m2_per_ctn: string;
@@ -22,6 +24,8 @@ interface FormData {
 const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, onSuccess }) => {
   const [formData, setFormData] = useState<FormData>({
     product_id: '',
+    series: '',
+    code: '',
     size: '',
     pcs_per_ctn: '',
     m2_per_ctn: '',
@@ -37,6 +41,8 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
     if (variant) {
       setFormData({
         product_id: variant.productId.toString(),
+        series: variant.series || '', // Added series
+        code: variant.code || '', // Added code
         size: variant.size || '',
         pcs_per_ctn: variant.pcsPerCtn.toString(),
         m2_per_ctn: variant.m2PerCtn.toString(),
@@ -45,7 +51,8 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
         image: null
       });
       if (variant.image) {
-        setImagePreview(`http://localhost:5000${variant.image}`);
+        const backendUrl = import.meta.env.VITE_API_URL?.replace(/\/api$/, '') || 'http://localhost:5000';
+        setImagePreview(`${backendUrl}${variant.image}`);
       }
     }
   }, [variant]);
@@ -90,6 +97,12 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
     if (!formData.product_id) {
       newErrors.product_id = 'Product is required';
     }
+    if (!formData.series.trim()) {
+      newErrors.series = 'Series is required';
+    }
+    if (!formData.code.trim()) {
+      newErrors.code = 'Product code is required';
+    }
     if (!formData.size.trim()) {
       newErrors.size = 'Size is required';
     }
@@ -122,6 +135,8 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
     try {
       const formDataToSend = new FormData();
       formDataToSend.append('product_id', formData.product_id);
+      formDataToSend.append('series', formData.series); // ADDED: series
+      formDataToSend.append('code', formData.code);     // ADDED: code
       formDataToSend.append('size', formData.size);
       formDataToSend.append('pcs_per_ctn', formData.pcs_per_ctn);
       formDataToSend.append('m2_per_ctn', formData.m2_per_ctn);
@@ -185,11 +200,50 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
               <option value="">Select a product</option>
               {products.map((product) => (
                 <option key={product.id} value={product.id}>
-                  {product.name} ({product.brand} - {product.series})
+                  {product.name} ({product.brand})
                 </option>
               ))}
             </select>
             {errors.product_id && <p className="mt-1 text-sm text-red-600">{errors.product_id}</p>}
+          </div>
+
+          {/* Series and Code */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="series" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Series *
+              </label>
+              <input
+                type="text"
+                id="series"
+                name="series"
+                value={formData.series}
+                onChange={handleChange}
+                className={`w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
+                  errors.series ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder="Enter series name"
+              />
+              {errors.series && <p className="mt-1 text-sm text-red-600">{errors.series}</p>}
+            </div>
+            
+            <div>
+              <label htmlFor="code" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Product Code *
+              </label>
+              <input
+                type="text"
+                id="code"
+                name="code"
+                value={formData.code}
+                onChange={handleChange}
+                className={`w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
+                  errors.code ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder="Enter product code"
+              />
+              {errors.code && <p className="mt-1 text-sm text-red-600">{errors.code}</p>}
+            </div>
           </div>
 
           {/* Size */}
