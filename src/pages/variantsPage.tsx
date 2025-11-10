@@ -206,7 +206,7 @@ const VariantsPage: React.FC = () => {
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
           {selectedSize === 'all' && selectedTileType === 'all' 
             ? 'All Variants' 
-            : `${selectedTileType !== 'all' ? selectedTileType === 'slide' ? 'Slide' : 'Non-Slide' : ''} ${selectedSize !== 'all' ? selectedSize : ''} Variants`.trim()}
+            : `${selectedTileType !== 'all' ? selectedTileType === 'slide' ? 'Slide' : 'non-Slide' : ''} ${selectedSize !== 'all' ? selectedSize : ''} Variants`.trim()}
         </h2>
 
         {filteredVariants.length === 0 ? (
@@ -272,7 +272,7 @@ const VariantsPage: React.FC = () => {
                           ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
                           : 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
                       }`}>
-                        {variant.tileType === 'slide' ? 'Slide' : 'Non-Slide'}
+                        {variant.tileType === 'slide' ? 'Slide' : 'non-Slide'}
                       </span>
                     </p>
                     <p className={`text-sm ${variant.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
@@ -290,7 +290,7 @@ const VariantsPage: React.FC = () => {
           <div className="mt-6 text-center text-gray-500 dark:text-gray-400">
             Showing {filteredVariants.length} variant{filteredVariants.length !== 1 ? 's' : ''}
             {selectedSize !== 'all' && ` in ${selectedSize} size`}
-            {selectedTileType !== 'all' && ` (${selectedTileType === 'slide' ? 'Slide' : 'Non-Slide'} tiles)`}
+            {selectedTileType !== 'all' && ` (${selectedTileType === 'slide' ? 'Slide' : 'non-Slide'} tiles)`}
           </div>
         )}
       </div>
