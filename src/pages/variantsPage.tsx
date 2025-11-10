@@ -11,6 +11,7 @@ const VariantsPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
   const [selectedSize, setSelectedSize] = useState<string>('all');
+  const [selectedTileType, setSelectedTileType] = useState<string>('all'); // ADD THIS
   const [availableSizes, setAvailableSizes] = useState<string[]>([]);
 
   useEffect(() => {
@@ -22,19 +23,17 @@ const VariantsPage: React.FC = () => {
   const fetchProductAndVariants = async (id: number): Promise<void> => {
     try {
       setLoading(true);
-      
       // Fetch product details
       const productResponse = await productAPI.getById(id);
       if (productResponse?.data?.success && productResponse.data.data) {
         setProduct(productResponse.data.data);
       }
-      
+
       // Fetch variants
       const variantsResponse = await variantAPI.getByProductId(id);
       if (variantsResponse?.data?.success && variantsResponse.data.data) {
         const allVariants = variantsResponse.data.data;
         setVariants(allVariants);
-        
         // Extract unique sizes
         const sizes = Array.from(new Set(allVariants.map(variant => variant.size))).filter(Boolean);
         setAvailableSizes(['all', ...sizes]);
@@ -48,13 +47,12 @@ const VariantsPage: React.FC = () => {
   };
 
   const getImageUrl = (imagePath?: string | null) => {
-  if (!imagePath) return 'https://via.placeholder.com/400x400?text=No+Image';
-  if (imagePath.startsWith('http')) return imagePath;
-
-  // Use backend URL from environment
-  const backendUrl = import.meta.env.VITE_API_URL.replace(/\/api$/, '');
-  return `${backendUrl}${imagePath}`;
-};
+    if (!imagePath) return 'https://via.placeholder.com/400x400?text=No+Image';
+    if (imagePath.startsWith('http')) return imagePath;
+    // Use backend URL from environment
+    const backendUrl = import.meta.env.VITE_API_URL.replace(/\/api$/, '');
+    return `${backendUrl}${imagePath}`;
+  };
 
   const handleVariantClick = (variantId: number): void => {
     navigate(`/product/${variantId}`);
@@ -68,10 +66,16 @@ const VariantsPage: React.FC = () => {
     setSelectedSize(size);
   };
 
-  // Filter variants based on selected size
-  const filteredVariants = selectedSize === 'all' 
-    ? variants 
-    : variants.filter(variant => variant.size === selectedSize);
+  const handleTileTypeClick = (tileType: string): void => { // ADD THIS FUNCTION
+    setSelectedTileType(tileType);
+  };
+
+  // Filter variants based on selected size AND tile type
+  const filteredVariants = variants.filter(variant => {
+    const sizeMatch = selectedSize === 'all' || variant.size === selectedSize;
+    const tileTypeMatch = selectedTileType === 'all' || variant.tileType === selectedTileType;
+    return sizeMatch && tileTypeMatch;
+  });
 
   if (loading) {
     return (
@@ -85,9 +89,7 @@ const VariantsPage: React.FC = () => {
     return (
       <div className="text-center py-12">
         <p className="text-red-500 text-lg">{error}</p>
-        <button 
-          onClick={handleBackClick}
-          className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        <button onClick={handleBackClick} className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
           Back to Home
         </button>
@@ -99,9 +101,7 @@ const VariantsPage: React.FC = () => {
     return (
       <div className="text-center py-12">
         <p className="text-red-500 text-lg">Product not found</p>
-        <button 
-          onClick={handleBackClick}
-          className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        <button onClick={handleBackClick} className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
           Back to Home
         </button>
@@ -113,9 +113,7 @@ const VariantsPage: React.FC = () => {
     <div className="min-h-screen bg-white dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
         {/* Back Button */}
-        <button 
-          onClick={handleBackClick}
-          className="flex items-center text-blue-600 hover:text-blue-700 mb-6"
+        <button onClick={handleBackClick} className="flex items-center text-blue-600 hover:text-blue-700 mb-6"
         >
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -133,14 +131,6 @@ const VariantsPage: React.FC = () => {
               <span className="font-semibold text-gray-600 dark:text-gray-300">Brand:</span>
               <span className="ml-2 text-gray-800 dark:text-white">{product.brand}</span>
             </div>
-            {/* <div>
-              <span className="font-semibold text-gray-600 dark:text-gray-300">Series:</span>
-              <span className="ml-2 text-gray-800 dark:text-white">{product.series}</span>
-            </div> */}
-            {/* <div>
-              <span className="font-semibold text-gray-600 dark:text-gray-300">Code:</span>
-              <span className="ml-2 text-gray-800 dark:text-white">{product.code}</span>
-            </div> */}
           </div>
           {product.description && (
             <p className="mt-4 text-gray-500 dark:text-gray-400">
@@ -173,28 +163,71 @@ const VariantsPage: React.FC = () => {
           </div>
         )}
 
+        {/* Tile Type Filter - ADD THIS SECTION */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+            Tile Categories
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => handleTileTypeClick('all')}
+              className={`px-6 py-3 rounded-lg font-medium transition duration-300 ${
+                selectedTileType === 'all'
+                  ? 'bg-blue-600 text-white shadow-lg'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+              }`}
+            >
+              All Tiles
+            </button>
+            <button
+              onClick={() => handleTileTypeClick('slide')}
+              className={`px-6 py-3 rounded-lg font-medium transition duration-300 ${
+                selectedTileType === 'slide'
+                  ? 'bg-green-600 text-white shadow-lg'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+              }`}
+            >
+              Slide Tiles
+            </button>
+            <button
+              onClick={() => handleTileTypeClick('non-slide')}
+              className={`px-6 py-3 rounded-lg font-medium transition duration-300 ${
+                selectedTileType === 'non-slide'
+                  ? 'bg-purple-600 text-white shadow-lg'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+              }`}
+            >
+              Non-Slide Tiles
+            </button>
+          </div>
+        </div>
+
         {/* Variants Grid */}
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
-          {selectedSize === 'all' ? 'All Variants' : `${selectedSize} Variants`}
+          {selectedSize === 'all' && selectedTileType === 'all' 
+            ? 'All Variants' 
+            : `${selectedTileType !== 'all' ? selectedTileType === 'slide' ? 'Slide' : 'Non-Slide' : ''} ${selectedSize !== 'all' ? selectedSize : ''} Variants`.trim()}
         </h2>
-        
+
         {filteredVariants.length === 0 ? (
           <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg">
             <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">
-              {selectedSize === 'all' 
+              {selectedSize === 'all' && selectedTileType === 'all' 
                 ? 'No variants available for this product.' 
-                : `No variants available in ${selectedSize} size.`
-              }
+                : `No variants found for the selected filters.`}
             </p>
-            {selectedSize !== 'all' && (
+            {(selectedSize !== 'all' || selectedTileType !== 'all') && (
               <button
-                onClick={() => setSelectedSize('all')}
+                onClick={() => {
+                  setSelectedSize('all');
+                  setSelectedTileType('all');
+                }}
                 className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
               >
-                View all sizes
+                View all variants
               </button>
             )}
           </div>
@@ -232,14 +265,18 @@ const VariantsPage: React.FC = () => {
                     <p className="text-gray-600 dark:text-gray-300">
                       <span className="font-medium">Series:</span> {variant.series}
                     </p>
-                    {/* <p className="text-gray-600 dark:text-gray-300">
-                      <span className="font-medium">m²/Ctn:</span> {variant.m2PerCtn}
-                    </p>
                     <p className="text-gray-600 dark:text-gray-300">
-                      <span className="font-medium">kg/Ctn:</span> {variant.kgPerCtn}
-                    </p> */}
+                      <span className="font-medium">Type:</span> 
+                      <span className={`ml-1 px-2 py-1 rounded-full text-xs ${
+                        variant.tileType === 'slide' 
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+                          : 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+                      }`}>
+                        {variant.tileType === 'slide' ? 'Slide' : 'Non-Slide'}
+                      </span>
+                    </p>
                     <p className={`text-sm ${variant.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      <span className="font-medium">Stock:</span> {variant.stock > 0 ? `in stock` : 'Out of stock'}
+                      <span className="font-medium">Stock:</span> {variant.stock > 0 ? 'In stock' : 'Out of stock'}
                     </p>
                   </div>
                 </div>
@@ -253,6 +290,7 @@ const VariantsPage: React.FC = () => {
           <div className="mt-6 text-center text-gray-500 dark:text-gray-400">
             Showing {filteredVariants.length} variant{filteredVariants.length !== 1 ? 's' : ''}
             {selectedSize !== 'all' && ` in ${selectedSize} size`}
+            {selectedTileType !== 'all' && ` (${selectedTileType === 'slide' ? 'Slide' : 'Non-Slide'} tiles)`}
           </div>
         )}
       </div>

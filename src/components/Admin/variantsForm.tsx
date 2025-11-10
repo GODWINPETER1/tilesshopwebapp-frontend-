@@ -18,6 +18,7 @@ interface FormData {
   m2_per_ctn: string;
   kg_per_ctn: string;
   stock: string;
+  tile_type: string; // ADD THIS
   image: File | null;
 }
 
@@ -31,8 +32,10 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
     m2_per_ctn: '',
     kg_per_ctn: '',
     stock: '',
+    tile_type: 'non-slide', // DEFAULT VALUE
     image: null
   });
+
   const [loading, setLoading] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string>('');
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -41,13 +44,14 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
     if (variant) {
       setFormData({
         product_id: variant.productId.toString(),
-        series: variant.series || '', // Added series
-        code: variant.code || '', // Added code
+        series: variant.series || '',
+        code: variant.code || '',
         size: variant.size || '',
         pcs_per_ctn: variant.pcsPerCtn.toString(),
         m2_per_ctn: variant.m2PerCtn.toString(),
         kg_per_ctn: variant.kgPerCtn.toString(),
         stock: variant.stock.toString(),
+        tile_type: variant.tileType || 'non-slide', // ADD THIS
         image: null
       });
       if (variant.image) {
@@ -59,27 +63,15 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>): void => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Clear error when user starts typing
+    setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
+      setErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0] || null;
-    setFormData(prev => ({
-      ...prev,
-      image: file
-    }));
-
-    // Create preview
+    setFormData(prev => ({ ...prev, image: file }));
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -93,7 +85,6 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
-
     if (!formData.product_id) {
       newErrors.product_id = 'Product is required';
     }
@@ -118,30 +109,29 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
     if (!formData.stock || parseInt(formData.stock) < 0) {
       newErrors.stock = 'Valid stock quantity is required';
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    
     if (!validateForm()) {
       return;
     }
 
     setLoading(true);
-
     try {
       const formDataToSend = new FormData();
       formDataToSend.append('product_id', formData.product_id);
-      formDataToSend.append('series', formData.series); // ADDED: series
-      formDataToSend.append('code', formData.code);     // ADDED: code
+      formDataToSend.append('series', formData.series);
+      formDataToSend.append('code', formData.code);
       formDataToSend.append('size', formData.size);
       formDataToSend.append('pcs_per_ctn', formData.pcs_per_ctn);
       formDataToSend.append('m2_per_ctn', formData.m2_per_ctn);
       formDataToSend.append('kg_per_ctn', formData.kg_per_ctn);
       formDataToSend.append('stock', formData.stock);
+      formDataToSend.append('tile_type', formData.tile_type); // ADD THIS
+      
       if (formData.image) {
         formDataToSend.append('image', formData.image);
       }
@@ -153,7 +143,6 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
         await variantAPI.create(formDataToSend);
         alert('Variant created successfully');
       }
-
       onSuccess();
     } catch (err: any) {
       console.error('Error saving variant:', err);
@@ -171,9 +160,7 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
           <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
             {variant ? 'Edit Variant' : 'Create Variant'}
           </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition duration-300"
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition duration-300"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -226,7 +213,6 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
               />
               {errors.series && <p className="mt-1 text-sm text-red-600">{errors.series}</p>}
             </div>
-            
             <div>
               <label htmlFor="code" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Product Code *
@@ -286,7 +272,6 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
               />
               {errors.pcs_per_ctn && <p className="mt-1 text-sm text-red-600">{errors.pcs_per_ctn}</p>}
             </div>
-            
             <div>
               <label htmlFor="m2_per_ctn" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 m²/Ctn *
@@ -306,7 +291,6 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
               />
               {errors.m2_per_ctn && <p className="mt-1 text-sm text-red-600">{errors.m2_per_ctn}</p>}
             </div>
-            
             <div>
               <label htmlFor="kg_per_ctn" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 kg/Ctn *
@@ -348,6 +332,23 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
             {errors.stock && <p className="mt-1 text-sm text-red-600">{errors.stock}</p>}
           </div>
 
+          {/* Tile Type */}
+          <div>
+            <label htmlFor="tile_type" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Tile Type *
+            </label>
+            <select
+              id="tile_type"
+              name="tile_type"
+              value={formData.tile_type}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            >
+              <option value="non-slide">Non-Slide Tiles</option>
+              <option value="slide">Slide Tiles</option>
+            </select>
+          </div>
+
           {/* Image Upload */}
           <div>
             <label htmlFor="image" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -363,11 +364,7 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
             {imagePreview && (
               <div className="mt-4">
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Preview:</p>
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="h-32 w-32 object-cover rounded-lg border border-gray-300 dark:border-gray-600"
-                />
+                <img src={imagePreview} alt="Preview" className="h-32 w-32 object-cover rounded-lg border border-gray-300 dark:border-gray-600" />
               </div>
             )}
           </div>

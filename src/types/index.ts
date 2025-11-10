@@ -20,6 +20,7 @@ export interface Variant {
   kgPerCtn: number;
   image: string | null;
   stock: number;
+  tileType: string 
 }
 
 // API Response types
