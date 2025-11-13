@@ -42,7 +42,7 @@ const ManageProducts: React.FC = () => {
 
   const getImageUrl = (imagePath?: string | null) => {
     if (!imagePath) return 'https://via.placeholder.com/400x400?text=No+Image';
-    if (imagePath.startsWith('http')) return imagePath;
+    return imagePath
 
     // Remove '/api' from backend URL if your images are served at /uploads
     const backendUrl = import.meta.env.VITE_API_URL?.replace(/\/api$/, '') || 'http://localhost:5000';
