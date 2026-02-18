@@ -65,3 +65,14 @@ export interface AdminVariant extends Variant {
   updated_at?: string;
   is_deleted?: boolean;
 }
+
+export type OtherProduct = {
+  id: number;
+  name: string;
+  brand?: string;
+  description?: string;
+  image?: string;
+  price?: number;
+  stock?: number;
+  category?: string;
+};

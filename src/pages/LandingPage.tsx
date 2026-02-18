@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { productAPI } from '../services/api';
-import { Product } from '../types';
+import { productAPI , otherProductAPI } from '../services/api';
+import { Product , OtherProduct } from '../types';
 
 const LandingPage: React.FC = () => {
   const [tilesProducts, setTilesProducts] = useState<Product[]>([]);
-  const [otherProducts, setOtherProducts] = useState<Product[]>([]);
+  const [otherProducts, setOtherProducts] = useState<OtherProduct[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
@@ -15,30 +15,26 @@ const LandingPage: React.FC = () => {
   }, []);
 
   const fetchProducts = async (): Promise<void> => {
-    try {
-      setLoading(true);
-      
-      // Fetch tiles products
-      const tilesResponse = await productAPI.getByCategory('tiles');
-      if (tilesResponse.data.success) {
-        setTilesProducts(tilesResponse.data.data ?? []);
-      }
-      
-      // Fetch other products (all non-tiles)
-      const otherResponse = await productAPI.getAll();
-      if (otherResponse.data?.success && otherResponse.data.data) {
-        const otherProductsData = otherResponse.data.data.filter(
-          (product: Product) => product.category !== 'tiles'
-        );
-        setOtherProducts(otherProductsData);
-      }
-    } catch (err) {
-      setError('Failed to fetch products');
-      console.error('Error fetching products:', err);
-    } finally {
-      setLoading(false);
+  try {
+    setLoading(true);
+
+    const tilesResponse = await productAPI.getByCategory('tiles');
+    if (tilesResponse.data.success) {
+      setTilesProducts(tilesResponse.data.data ?? []);
     }
-  };
+
+    const otherResponse = await otherProductAPI.getAll();
+    if (otherResponse.data.success) {
+      setOtherProducts(otherResponse.data.data ?? []);
+    }
+
+  } catch (err) {
+    setError('Failed to fetch products');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const getImageUrl = (imagePath?: string | null) => {
   if (!imagePath) return 'https://via.placeholder.com/400x400?text=No+Image';
@@ -58,6 +54,11 @@ const LandingPage: React.FC = () => {
       navigate(`/product/${product.id}`);
     }
   };
+
+  const handleOtherClick = (product: OtherProduct) => {
+  navigate(`/other-product/${product.id}`);
+};
+
 
   const ProductCard: React.FC<{ product: Product }> = ({ product }) => (
     <div
@@ -106,6 +107,28 @@ const LandingPage: React.FC = () => {
       </div>
     </div>
   );
+
+  const OtherProductCard: React.FC<{ product: OtherProduct }> = ({ product }) => (
+  <div
+    className="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden cursor-pointer transform hover:scale-105 transition"
+    onClick={() => handleOtherClick(product)}
+  >
+    <div className="h-48 bg-gray-200 dark:bg-gray-600">
+      <img
+        src={getImageUrl(product.image)}
+        alt={product.name}
+        className="w-full h-full object-cover"
+      />
+    </div>
+
+    <div className="p-4">
+      <h3 className="font-semibold text-gray-800 dark:text-white">
+        {product.name}
+      </h3>
+    </div>
+  </div>
+);
+
 
   if (loading) {
     return (
@@ -157,8 +180,8 @@ const LandingPage: React.FC = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {otherProducts.map((product: Product) => (
-                <ProductCard key={product.id} product={product} />
+              {otherProducts.map(product => (
+                <OtherProductCard key={product.id} product={product}/>
               ))}
             </div>
           )}

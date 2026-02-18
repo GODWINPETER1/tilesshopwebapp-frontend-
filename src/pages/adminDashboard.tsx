@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import ManageProducts from '../components/Admin/manageProducts';
 import ManageVariants from '../components/Admin/manageVariants';
+import ManageOtherProducts from '../components/Admin/managdOtherProducts';
 
-type AdminTab = 'products' | 'variants';
+type AdminTab = 'products' | 'variants' | 'other';
 
 const AdminDashboard: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -123,6 +124,10 @@ const AdminDashboard: React.FC = () => {
               >
                 Manage Variants
               </button>
+
+              <button onClick={() => setActiveTab('other')} className={`flex-1 py-4 px-6 text-center font-medium text-sm ${activeTab === 'other' ? 'border-b-2 border-blue-500 text-blue-600 dark:text-blue-400': 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'}`}>
+                 Other Products 
+              </button>
             </nav>
           </div>
 
@@ -130,6 +135,7 @@ const AdminDashboard: React.FC = () => {
           <div className="p-6">
             {activeTab === 'products' && <ManageProducts />}
             {activeTab === 'variants' && <ManageVariants />}
+            {activeTab === 'other' && <ManageOtherProducts/>}
           </div>
         </div>
       </div>

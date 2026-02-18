@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
-import { Product, Variant, ApiResponse } from '../types';
+import { Product, Variant, ApiResponse , OtherProduct } from '../types';
+
+
 
 // Use VITE_API_URL from environment variables
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -69,5 +71,30 @@ export const variantAPI = {
     api.put(`/variants/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
   delete: (id: number): Promise<AxiosResponse<ApiResponse<void>>> => api.delete(`/variants/${id}`),
 };
+
+// Other Products API
+// Other Products API
+export const otherProductAPI = {
+  getAll: (): Promise<AxiosResponse<ApiResponse<OtherProduct[]>>> =>
+    api.get('/other-products'),
+
+  getById: (id: number): Promise<AxiosResponse<ApiResponse<OtherProduct>>> =>
+    api.get(`/other-products/${id}`),
+
+  create: (formData: FormData): Promise<AxiosResponse<ApiResponse<{ id: number }>>> =>
+    api.post('/other-products', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }),
+
+  update: (id: number, formData: FormData): Promise<AxiosResponse<ApiResponse<void>>> =>
+    api.put(`/other-products/${id}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }),
+
+  delete: (id: number): Promise<AxiosResponse<ApiResponse<void>>> =>
+    api.delete(`/other-products/${id}`),
+};
+
+
 
 export default api;
