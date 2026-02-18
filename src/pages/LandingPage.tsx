@@ -153,7 +153,7 @@ const LandingPage: React.FC = () => {
           
           {otherProducts.length === 0 ? (
             <div className="text-center text-gray-500 dark:text-gray-400 py-8">
-              No other products available.
+               coming soon 
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
