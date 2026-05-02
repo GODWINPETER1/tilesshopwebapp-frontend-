@@ -12,11 +12,7 @@ const Features: React.FC = () => {
       title: 'Endless Designs',
       description: 'Choose from hundreds of unique patterns, colors, and textures.'
     },
-    {
-      icon: '🚚',
-      title: 'Free Delivery',
-      description: 'Free delivery on all orders over $500 within the city limits.'
-    },
+    
     {
       icon: '🔧',
       title: 'Expert Support',
@@ -36,7 +32,7 @@ const Features: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
