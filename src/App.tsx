@@ -8,7 +8,7 @@ import Hero from './components/Hero';
 import Features from './components/Features';
 import ProductDetail from './pages/ProductDetails';
 import Footer from './components/Footer';
-import Testimonials from './components/Cta';
+// import Testimonials from './components/Cta';
 import ProductPreview from './pages/ProductPreview';
 import LandingPage from './pages/LandingPage';
 import AdminDashboard from './pages/adminDashboard';
@@ -23,7 +23,7 @@ function Home() {
         <Hero />
         <Features />
         <LandingPage />
-        <Testimonials/>
+       
       </main>
       <Footer />
     </>
