@@ -11,6 +11,7 @@ const OtherProductDetail: React.FC = () => {
 
   const getImageUrl = (image?: string | null) => {
     if (!image) return 'https://via.placeholder.com/600x400?text=No+Image';
+    if (image.startsWith('http')) return image
 
     const backend =
       import.meta.env.VITE_API_URL?.replace(/\/api$/, '') ||
