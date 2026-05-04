@@ -70,7 +70,7 @@ const Footer = () => {
           <div className="rounded-lg overflow-hidden shadow-lg border border-gray-800">
             <iframe
               title="Location Map"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31809.548969127828!2d39.2361!3d-6.7924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x185c4b0b6d47c4f3%3A0xa79ccf94c0d55689!2sDar%20es%20Salaam%2C%20Tanzania!5e0!3m2!1sen!2stz!4v1698304232951!5m2!1sen!2stz"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.548860982632!2d39.2767165!3d-6.8245903000000006!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x185c4babada6f537%3A0x9e6d9073909a6bd0!2sBARONGO%20GENERAL%20SUPPLY%20LTD!5e0!3m2!1sen!2stz!4v1777931471743!5m2!1sen!2stz"
               width="100%"
               height="200"
               loading="lazy"
@@ -80,6 +80,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
+     
 
       <div className="border-t border-gray-800 mt-12 pt-6 text-center text-sm text-gray-500">
         © {new Date().getFullYear()} Barongo General Supply Ltd. All rights reserved.

@@ -21,7 +21,7 @@ const Header: React.FC = () => {
         </div>
 
         {/* ✅ Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
+        {/* <nav className="hidden md:flex items-center space-x-8">
           {navItems.map((item) => (
             <a
               key={item}
@@ -31,7 +31,7 @@ const Header: React.FC = () => {
               {item}
             </a>
           ))}
-        </nav>
+        </nav> */}
 
         {/* ✅ Right Actions + Mobile Menu Button */}
         <div className="flex items-center space-x-3">
@@ -55,7 +55,7 @@ const Header: React.FC = () => {
       </div>
 
       {/* ✅ Mobile Menu */}
-      {isMobileMenuOpen && (
+      {/* {isMobileMenuOpen && (
         <nav className="md:hidden bg-white dark:bg-gray-900 shadow-lg border-t border-gray-100 dark:border-gray-800">
           <ul className="flex flex-col space-y-2 p-4">
             {navItems.map((item) => (
@@ -71,7 +71,7 @@ const Header: React.FC = () => {
             ))}
           </ul>
         </nav>
-      )}
+      )} */}
     </header>
   );
 };
