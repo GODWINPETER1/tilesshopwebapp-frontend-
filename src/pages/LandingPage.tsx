@@ -96,26 +96,78 @@ const LandingPage: React.FC = () => {
     </div>
   );
 
-  const OtherProductCard: React.FC<{ product: OtherProduct }> = ({ product }) => (
-    <div
-      className="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden cursor-pointer transform hover:scale-105 transition"
-      onClick={() => handleOtherClick(product)}
-    >
-      <div className="h-48 bg-gray-200 dark:bg-gray-600">
-        <img
-          src={getImageUrl(product.image)}
-          alt={product.name}
-          className="w-full h-full object-cover"
-        />
+ const OtherProductCard: React.FC<{ product: OtherProduct }> = ({ product }) => (
+  <div
+    onClick={() => handleOtherClick(product)}
+    className="
+      group
+      bg-white dark:bg-gray-700
+      rounded-2xl
+      overflow-hidden
+      cursor-pointer
+      shadow-sm
+      hover:shadow-xl
+      transition-all duration-300
+      hover:-translate-y-1
+    "
+  >
+    {/* IMAGE */}
+    <div className="relative h-52 overflow-hidden">
+      <img
+        src={getImageUrl(product.image)}
+        alt={product.name}
+        className="
+          w-full h-full object-cover
+          transition-transform duration-500
+          group-hover:scale-110
+        "
+      />
+
+      {/* subtle overlay */}
+      <div className="
+        absolute inset-0
+        bg-gradient-to-t from-black/40 via-transparent to-transparent
+        opacity-0 group-hover:opacity-100
+        transition
+      " />
+    </div>
+
+    {/* CONTENT */}
+    <div className="p-5 space-y-2">
+
+      {/* PRODUCT NAME */}
+      <h3 className="
+        text-base font-semibold
+        text-gray-800 dark:text-white
+        line-clamp-2
+        group-hover:text-green-600
+        transition
+      ">
+        {product.name}
+      </h3>
+
+      {/* BRAND (subtle) */}
+      <p className="text-sm text-gray-500 dark:text-gray-300">
+        {product.brand}
+      </p>
+
+      {/* ACTION INDICATOR */}
+      <div className="
+        flex items-center justify-between pt-2
+        text-sm font-medium
+        text-green-600
+        opacity-0 group-hover:opacity-100
+        transition
+      ">
+        <span>View Product</span>
+        <span className="transform group-hover:translate-x-1 transition">
+          →
+        </span>
       </div>
 
-      <div className="p-4">
-        <h3 className="font-semibold text-gray-800 dark:text-white">
-          {product.name}
-        </h3>
-      </div>
     </div>
-  );
+  </div>
+);
 
   if (loading) {
     return (

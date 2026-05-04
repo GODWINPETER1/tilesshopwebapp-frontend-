@@ -1,5 +1,5 @@
 import { Mail, MapPin, Phone, Facebook, Instagram, Twitter, } from "lucide-react";
-
+import logo from '../assets/head.png';
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-gray-300 pt-16 pb-8">
@@ -8,7 +8,7 @@ const Footer = () => {
         <div>
           {/* Replace TileCraft text with logo */}
           <img
-            src="/logo.png" // 🟢 Make sure logo.png is in your public/ folder
+            src={logo} // 🟢 Make sure logo.png is in your public/ folder
             alt="Barongo General Supply Ltd"
             className="w-36 mb-4"
           />
