@@ -88,7 +88,7 @@ const OtherProductDetail: React.FC = () => {
               {product.category && (
                 <p><strong>Category:</strong> {product.category}</p>
               )}
-
+{/* 
               {product.stock !== undefined && (
                 <p><strong>Stock:</strong> {product.stock}</p>
               )}
@@ -97,7 +97,7 @@ const OtherProductDetail: React.FC = () => {
                 <p className="text-xl font-semibold text-blue-600">
                   ${product.price}
                 </p>
-              )}
+              )} */}
             </div>
 
             {product.description && (
