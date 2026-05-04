@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { productAPI , otherProductAPI } from '../services/api';
-import { Product , OtherProduct } from '../types';
+import { productAPI, otherProductAPI } from '../services/api';
+import { Product, OtherProduct } from '../types';
 
 const LandingPage: React.FC = () => {
   const [tilesProducts, setTilesProducts] = useState<Product[]>([]);
   const [otherProducts, setOtherProducts] = useState<OtherProduct[]>([]);
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
@@ -15,50 +17,58 @@ const LandingPage: React.FC = () => {
   }, []);
 
   const fetchProducts = async (): Promise<void> => {
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const tilesResponse = await productAPI.getByCategory('tiles');
-    if (tilesResponse.data.success) {
-      setTilesProducts(tilesResponse.data.data ?? []);
+      const tilesResponse = await productAPI.getByCategory('tiles');
+      if (tilesResponse.data.success) {
+        setTilesProducts(tilesResponse.data.data ?? []);
+      }
+
+      const otherResponse = await otherProductAPI.getAll();
+      if (otherResponse.data.success) {
+        setOtherProducts(otherResponse.data.data ?? []);
+      }
+
+    } catch (err) {
+      setError('Failed to fetch products');
+    } finally {
+      setLoading(false);
     }
-
-    const otherResponse = await otherProductAPI.getAll();
-    if (otherResponse.data.success) {
-      setOtherProducts(otherResponse.data.data ?? []);
-    }
-
-  } catch (err) {
-    setError('Failed to fetch products');
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   const getImageUrl = (imagePath?: string | null) => {
-  if (!imagePath) return 'https://via.placeholder.com/400x400?text=No+Image';
-  if (imagePath.startsWith('http')) return imagePath;
+    if (!imagePath) return 'https://via.placeholder.com/400x400?text=No+Image';
+    if (imagePath.startsWith('http')) return imagePath;
 
-  // Use backend URL from environment
-  const backendUrl = import.meta.env.VITE_API_URL.replace(/\/api$/, '');
-  return `${backendUrl}${imagePath}`;
-};
-
+    const backendUrl = import.meta.env.VITE_API_URL.replace(/\/api$/, '');
+    return `${backendUrl}${imagePath}`;
+  };
 
   const handleProductClick = (product: Product): void => {
     if (product.category === 'tiles') {
       navigate(`/variants/${product.id}`);
     } else {
-  
       navigate(`/product/${product.id}`);
     }
   };
 
   const handleOtherClick = (product: OtherProduct) => {
-  navigate(`/other-product/${product.id}`);
-};
+    navigate(`/other-product/${product.id}`);
+  };
 
+  // 🔥 GROUP OTHER PRODUCTS BY BRAND
+  const groupedByBrand = otherProducts.reduce((acc, product) => {
+    const brand = product.brand || 'Unknown';
+
+    if (!acc[brand]) {
+      acc[brand] = [];
+    }
+
+    acc[brand].push(product);
+
+    return acc;
+  }, {} as Record<string, OtherProduct[]>);
 
   const ProductCard: React.FC<{ product: Product }> = ({ product }) => (
     <div
@@ -72,63 +82,40 @@ const LandingPage: React.FC = () => {
             src={getImageUrl(product.image)}
             alt={product.name}
             className="h-full w-full object-cover"
-            onError={(e) => {
-              e.currentTarget.src = '/api/placeholder/300/200';
-            }}
           />
         ) : (
-          <div className="text-gray-400 dark:text-gray-300">
-            <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
+          <div className="text-gray-400">No Image</div>
         )}
       </div>
+
       <div className="p-4">
-        <div className="flex justify-between items-start mb-2">
-          {/* <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
-            {product.name}
-          </h3> */}
-          {/* <span className="bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full capitalize">
-            {product.category}
-          </span> */}
-        </div>
-        <p className="text-gray-600 dark:text-gray-300 text-sm mb-1">
+        <p className="text-gray-600 dark:text-gray-300 text-sm">
           {product.brand}
         </p>
-        {/* <p className="text-gray-500 dark:text-gray-400 text-sm">
-          {product.series}
-        </p> */}
-        {/* {product.category !== 'tiles' && product.description && (
-          <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 line-clamp-2">
-            {product.description}
-          </p>
-        )} */}
       </div>
     </div>
   );
 
   const OtherProductCard: React.FC<{ product: OtherProduct }> = ({ product }) => (
-  <div
-    className="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden cursor-pointer transform hover:scale-105 transition"
-    onClick={() => handleOtherClick(product)}
-  >
-    <div className="h-48 bg-gray-200 dark:bg-gray-600">
-      <img
-        src={getImageUrl(product.image)}
-        alt={product.name}
-        className="w-full h-full object-cover"
-      />
-    </div>
+    <div
+      className="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden cursor-pointer transform hover:scale-105 transition"
+      onClick={() => handleOtherClick(product)}
+    >
+      <div className="h-48 bg-gray-200 dark:bg-gray-600">
+        <img
+          src={getImageUrl(product.image)}
+          alt={product.name}
+          className="w-full h-full object-cover"
+        />
+      </div>
 
-    <div className="p-4">
-      <h3 className="font-semibold text-gray-800 dark:text-white">
-        {product.name}
-      </h3>
+      <div className="p-4">
+        <h3 className="font-semibold text-gray-800 dark:text-white">
+          {product.name}
+        </h3>
+      </div>
     </div>
-  </div>
-);
-
+  );
 
   if (loading) {
     return (
@@ -149,14 +136,15 @@ const LandingPage: React.FC = () => {
   return (
     <div className="py-12 bg-gray-50 dark:bg-gray-800">
       <div className="container mx-auto px-4">
+
         {/* Tiles Section */}
         <section className="mb-16">
           <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-8">
             Our Tiles Collection
           </h2>
-          
+
           {tilesProducts.length === 0 ? (
-            <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+            <div className="text-center text-gray-500 py-8">
               No tiles products available.
             </div>
           ) : (
@@ -173,19 +161,58 @@ const LandingPage: React.FC = () => {
           <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-8">
             Other Products
           </h2>
-          
+
           {otherProducts.length === 0 ? (
-            <div className="text-center text-gray-500 dark:text-gray-400 py-8">
-               coming soon 
+            <div className="text-center text-gray-500 py-8">
+              coming soon
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {otherProducts.map(product => (
-                <OtherProductCard key={product.id} product={product}/>
-              ))}
-            </div>
+            <>
+              {/* 🟢 SHOW BRANDS */}
+              {!selectedBrand && (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  {Object.keys(groupedByBrand).map((brand) => (
+                    <div
+                      key={brand}
+                      onClick={() => setSelectedBrand(brand)}
+                      className="cursor-pointer bg-white dark:bg-gray-700 p-6 rounded-lg shadow hover:scale-105 transition text-center"
+                    >
+                      <img
+                        src={getImageUrl(groupedByBrand[brand][0]?.image)}
+                        className="h-24 w-full object-cover rounded mb-3"
+                      />
+                      <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+                        {brand}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {groupedByBrand[brand].length} products
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* 🔵 SHOW PRODUCTS UNDER BRAND */}
+              {selectedBrand && (
+                <>
+                  <button
+                    onClick={() => setSelectedBrand(null)}
+                    className="mb-6 text-blue-600 hover:underline"
+                  >
+                    ← Back to Brands
+                  </button>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {groupedByBrand[selectedBrand].map(product => (
+                      <OtherProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+                </>
+              )}
+            </>
           )}
         </section>
+
       </div>
     </div>
   );
