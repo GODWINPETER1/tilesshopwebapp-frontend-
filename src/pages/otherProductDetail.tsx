@@ -9,7 +9,7 @@ const OtherProductDetail: React.FC = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState<OtherProduct | null>(null);
   const [loading, setLoading] = useState(true);
-  // const [zoomOpen, setZoomOpen] = useState(false);
+  const [zoomOpen, setZoomOpen] = useState(false);
 
   const getImageUrl = (image?: string | null) => {
     if (!image) return 'https://via.placeholder.com/600x400?text=No+Image';
