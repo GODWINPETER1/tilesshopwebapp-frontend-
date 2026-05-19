@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { otherProductAPI } from '../services/api';
 import { OtherProduct } from '../types';
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
 
 const OtherProductDetail: React.FC = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState<OtherProduct | null>(null);
   const [loading, setLoading] = useState(true);
-  const [zoomOpen, setZoomOpen] = useState(false);
+  // const [zoomOpen, setZoomOpen] = useState(false);
 
   const getImageUrl = (image?: string | null) => {
     if (!image) return 'https://via.placeholder.com/600x400?text=No+Image';
@@ -112,18 +114,19 @@ const OtherProductDetail: React.FC = () => {
       </div>
 
       {/* Zoom modal */}
-      {zoomOpen && (
-        <div
-          className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-6"
-          onClick={() => setZoomOpen(false)}
-        >
-          <img
-            src={imageUrl}
-            alt={product.name}
-            className="max-h-full max-w-full object-contain"
-          />
-        </div>
-      )}
+      
+        <div className="relative overflow-hidden rounded-xl shadow-lg group">
+          <Zoom>
+            <img
+              src={imageUrl}
+              alt={product.name}
+              className="w-full object-cover transition-transform duration-500 group-hover:scale-105 cursor-zoom-in"
+            />
+          </Zoom>
+
+  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition pointer-events-none" />
+</div>
+    
     </div>
   );
 };
