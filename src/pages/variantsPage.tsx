@@ -150,7 +150,7 @@ const VariantsPage: React.FC = () => {
                 <button
                   key={size}
                   onClick={() => handleSizeClick(size)}
-                  className={`px-6 py-3 rounded-lg font-medium transition duration-300 ${
+                  className={`px-6 py-3 rounded-lg cursor-pointer font-medium transition duration-300 ${
                     selectedSize === size
                       ? 'bg-blue-600 text-white shadow-lg'
                       : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
