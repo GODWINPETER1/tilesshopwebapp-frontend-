@@ -171,7 +171,7 @@ const VariantsPage: React.FC = () => {
           <div className="flex flex-wrap gap-3">
             <button
               onClick={() => handleTileTypeClick('all')}
-              className={`px-6 py-3 rounded-lg font-medium transition duration-300 ${
+              className={`px-6 py-3 rounded-lg font-medium cursor-pointer transition duration-300 ${
                 selectedTileType === 'all'
                   ? 'bg-blue-600 text-white shadow-lg'
                   : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
