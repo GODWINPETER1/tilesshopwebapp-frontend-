@@ -82,7 +82,7 @@ const Header: React.FC = () => {
           <button
             type="button"
             onClick={handleCartClick}
-            className="relative p-2.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200"
+            className="relative cursor-pointer p-2.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200"
             aria-label={`Shopping cart with ${cartItemCount} items`}
           >
 
@@ -173,10 +173,10 @@ const Header: React.FC = () => {
               <button
                 type="button"
                 onClick={handleCartClick}
-                className="w-full flex items-center justify-between text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200"
+                className="w-full  flex items-center justify-between text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200"
               >
 
-                <span className="flex items-center gap-3">
+                <span className="flex cursor-pointer items-center gap-3">
 
                   <HiOutlineShoppingCart
                     size={22}
