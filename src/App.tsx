@@ -1,58 +1,153 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from 'react-router-dom';
 
 // Components
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Features from './components/Features';
-import ProductDetail from './pages/ProductDetails';
 import Footer from './components/Footer';
-// import Testimonials from './components/Cta';
+
+// Pages
+import ProductDetail from './pages/ProductDetails';
 import ProductPreview from './pages/ProductPreview';
 import LandingPage from './pages/LandingPage';
 import AdminDashboard from './pages/adminDashboard';
 import OtherProductDetail from './pages/otherProductDetail';
-import VariantsPage from './pages/variantsPage'; 
+import VariantsPage from './pages/variantsPage';
 import CartPage from './pages/CartPage';
 import OrderRequest from './pages/orderRequest';
 import OrderConfirmation from './pages/orderConfirmation';
 
+
+// =====================================================
+// HOME PAGE
+// =====================================================
+
 function Home() {
   return (
     <>
-      <Header />
-      <main>
-        <Hero />
-        <Features />
-        <LandingPage />
-       
-      </main>
-      <Footer />
+      <Hero />
+      <Features />
+      <LandingPage />
     </>
   );
 }
 
-const App: React.FC = () => {
+
+// =====================================================
+// CUSTOMER LAYOUT
+// =====================================================
+
+function CustomerLayout() {
   return (
-   
-      <Router>
-        <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/product/:variantId" element={<ProductDetail />} />
-            <Route path="/variants/:productId" element={<VariantsPage />} /> 
-            <Route path='/product-preview/:name' element={<ProductPreview/>}/>
-            <Route path='/other-product/:productId' element={<OtherProductDetail/>}/>
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path='/cart' element={<CartPage/>}/>
-            <Route path='/order-request' element={<OrderRequest/>}/>
-            <Route path="/order-confirmation/:orderNumber" element={<OrderConfirmation />}/>
-          </Routes>
-        </div>
-      </Router>
-  
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+
+      {/* Global Header */}
+      <Header />
+
+      {/* Content */}
+      <main className="pt-20">
+
+        <Routes>
+
+          {/* Home */}
+          <Route
+            path="/"
+            element={<Home />}
+          />
+
+          {/* Product Detail */}
+          <Route
+            path="/product/:variantId"
+            element={<ProductDetail />}
+          />
+
+          {/* Product Variants */}
+          <Route
+            path="/variants/:productId"
+            element={<VariantsPage />}
+          />
+
+          {/* Product Preview */}
+          <Route
+            path="/product-preview/:name"
+            element={<ProductPreview />}
+          />
+
+          {/* Other Product */}
+          <Route
+            path="/other-product/:productId"
+            element={<OtherProductDetail />}
+          />
+
+          {/* Cart */}
+          <Route
+            path="/cart"
+            element={<CartPage />}
+          />
+
+          {/* Order Request */}
+          <Route
+            path="/order-request"
+            element={<OrderRequest />}
+          />
+
+          {/* Order Confirmation */}
+          <Route
+            path="/order-confirmation/:orderNumber"
+            element={<OrderConfirmation />}
+          />
+
+        </Routes>
+
+      </main>
+
+      {/* Global Footer */}
+      <Footer />
+
+    </div>
   );
 }
+
+
+// =====================================================
+// APP
+// =====================================================
+
+const App: React.FC = () => {
+  return (
+    <Router>
+
+      <Routes>
+
+        {/* =================================================
+            ADMIN
+        ================================================= */}
+
+        <Route
+          path="/admin"
+          element={<AdminDashboard />}
+        />
+
+
+        {/* =================================================
+            CUSTOMER WEBSITE
+        ================================================= */}
+
+        <Route
+          path="*"
+          element={<CustomerLayout />}
+        />
+
+      </Routes>
+
+    </Router>
+  );
+};
+
 
 export default App;
