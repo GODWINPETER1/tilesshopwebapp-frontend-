@@ -21,6 +21,7 @@ import VariantsPage from './pages/variantsPage';
 import CartPage from './pages/CartPage';
 import OrderRequest from './pages/orderRequest';
 import OrderConfirmation from './pages/orderConfirmation';
+import SearchPage from './pages/SearchPage';
 
 
 // =====================================================
@@ -101,6 +102,8 @@ function CustomerLayout() {
             path="/order-confirmation/:orderNumber"
             element={<OrderConfirmation />}
           />
+
+          <Route path='/search' element={<SearchPage/>}/>
 
         </Routes>
 

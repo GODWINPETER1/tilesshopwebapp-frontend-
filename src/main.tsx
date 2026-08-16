@@ -1,14 +1,20 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { QueryClient , QueryClientProvider } from "@tanstack/react-query";
 import './index.css'
 import App from './App'
 import { CartProvider } from './context/CartContext'
 
+const queryClient = new QueryClient();
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <CartProvider> 
+    <QueryClientProvider client={queryClient}> 
+       <CartProvider> 
          <App />
-    </CartProvider>
+      </CartProvider>
+    </QueryClientProvider>
+    
    
   </StrictMode>,
 )
