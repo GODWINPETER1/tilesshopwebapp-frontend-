@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { Product, Variant, ApiResponse , OtherProduct } from '../types';
+import { CartData  } from '../types';
 
 
 
@@ -7,6 +8,20 @@ import { Product, Variant, ApiResponse , OtherProduct } from '../types';
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 console.log('API Base URL:', API_BASE_URL); // Debugging
+
+const CART_SESSION_KEY = 'barongo_cart_session';
+
+const getCartSessionId = (): string => {
+
+  let sessionId = localStorage.getItem(CART_SESSION_KEY);
+
+  if (!sessionId) {
+    sessionId = crypto.randomUUID();
+    localStorage.setItem(CART_SESSION_KEY, sessionId);
+}
+
+return sessionId;
+}
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -94,6 +109,154 @@ export const otherProductAPI = {
   delete: (id: number): Promise<AxiosResponse<ApiResponse<void>>> =>
     api.delete(`/other-products/${id}`),
 };
+
+
+export const cartAPI = {
+
+  getCart: (): Promise<AxiosResponse<ApiResponse<CartData>>> =>
+    api.get('/cart', {
+      headers: {
+        'X-Cart-Session': getCartSessionId(),
+      },
+    }),
+
+  addItem: (
+    productId: number,
+    variantId: number,
+    quantity: number = 1
+  ): Promise<AxiosResponse<ApiResponse<CartData>>> =>
+    api.post(
+      '/cart/items',
+      {
+        productId,
+        variantId,
+        quantity,
+      },
+      {
+        headers: {
+          'X-Cart-Session': getCartSessionId(),
+        },
+      }
+    ),
+
+  updateItem: (
+    itemId: number,
+    quantity: number
+  ): Promise<AxiosResponse<ApiResponse<CartData>>> =>
+    api.put(
+      `/cart/items/${itemId}`,
+      {
+        quantity,
+      },
+      {
+        headers: {
+          'X-Cart-Session': getCartSessionId(),
+        },
+      }
+    ),
+
+  removeItem: (
+    itemId: number
+  ): Promise<AxiosResponse<ApiResponse<CartData>>> =>
+    api.delete(
+      `/cart/items/${itemId}`,
+      {
+        headers: {
+          'X-Cart-Session': getCartSessionId(),
+        },
+      }
+    ),
+
+  clear: (): Promise<AxiosResponse<ApiResponse<CartData>>> =>
+    api.delete('/cart', {
+      headers: {
+        'X-Cart-Session': getCartSessionId(),
+      },
+    }),
+};
+
+// =====================================================
+// Orders API
+// =====================================================
+
+export const orderAPI = {
+
+  // =====================================================
+  // CUSTOMER
+  // =====================================================
+
+  create: (
+    customerName: string,
+    phone: string,
+    email: string,
+    deliveryLocation: string,
+    notes: string
+  ): Promise<
+    AxiosResponse<ApiResponse<any>>
+  > =>
+    api.post(
+      '/orders',
+      {
+        customerName,
+        phone,
+        email,
+        deliveryLocation,
+        notes,
+      },
+      {
+        headers: {
+          'X-Cart-Session':
+            getCartSessionId(),
+        },
+      }
+    ),
+
+
+  getByOrderNumber: (
+    orderNumber: string
+  ): Promise<
+    AxiosResponse<ApiResponse<any>>
+  > =>
+    api.get(
+      `/orders/number/${orderNumber}`
+    ),
+
+
+  // =====================================================
+  // ADMIN
+  // =====================================================
+
+  getAll: (): Promise<
+    AxiosResponse<ApiResponse<any[]>>
+  > =>
+    api.get('/orders/admin/all'),
+
+
+  getById: (
+    id: number
+  ): Promise<
+    AxiosResponse<ApiResponse<any>>
+  > =>
+    api.get(`/orders/admin/${id}`),
+
+
+  updateStatus: (
+    id: number,
+    status: string
+  ): Promise<
+    AxiosResponse<ApiResponse<void>>
+  > =>
+    api.put(
+      `/orders/admin/${id}/status`,
+      {
+        status,
+      }
+    ),
+
+ 
+};
+
+
 
 
 

@@ -13,7 +13,10 @@ import ProductPreview from './pages/ProductPreview';
 import LandingPage from './pages/LandingPage';
 import AdminDashboard from './pages/adminDashboard';
 import OtherProductDetail from './pages/otherProductDetail';
-import VariantsPage from './pages/variantsPage'; // 👈 New
+import VariantsPage from './pages/variantsPage'; 
+import CartPage from './pages/CartPage';
+import OrderRequest from './pages/orderRequest';
+import OrderConfirmation from './pages/orderConfirmation';
 
 function Home() {
   return (
@@ -42,6 +45,9 @@ const App: React.FC = () => {
             <Route path='/product-preview/:name' element={<ProductPreview/>}/>
             <Route path='/other-product/:productId' element={<OtherProductDetail/>}/>
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path='/cart' element={<CartPage/>}/>
+            <Route path='/order-request' element={<OrderRequest/>}/>
+            <Route path="/order-confirmation/:orderNumber" element={<OrderConfirmation />}/>
           </Routes>
         </div>
       </Router>

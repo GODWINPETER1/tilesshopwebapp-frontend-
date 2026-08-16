@@ -76,3 +76,41 @@ export type OtherProduct = {
   stock?: number;
   category?: string;
 };
+
+export interface CartItem {
+  id: number;
+  cartId: number;
+  productId: number;
+  variantId: number;
+  quantity: number;
+
+  productName: string;
+  brand: string;
+
+  series: string;
+  code: string;
+  size: string;
+
+  pcsPerCtn: number;
+  m2PerCtn: number;
+  kgPerCtn: number;
+
+  productImage?: string | null;
+  variantImage: string | null
+
+  stock: number;
+  tileType: string;
+}
+
+export interface Cart {
+  id: number;
+  session_id: string;
+  status: 'active' | 'submitted' | 'abandoned';
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface CartData {
+  cart: Cart;
+  items: CartItem[];
+}
