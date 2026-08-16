@@ -31,7 +31,7 @@ function Home() {
   return (
     <>
       <Hero />
-      <Features />
+      
       <LandingPage />
     </>
   );
@@ -107,6 +107,7 @@ function CustomerLayout() {
       </main>
 
       {/* Global Footer */}
+      <Features />
       <Footer />
 
     </div>
