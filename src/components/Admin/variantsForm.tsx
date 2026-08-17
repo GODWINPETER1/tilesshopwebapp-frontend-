@@ -40,6 +40,24 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
   const [imagePreview, setImagePreview] = useState<string>('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const getImageUrl = (imagePath: string): string => {
+  // If it's already a complete URL, use it directly
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+
+  const backendUrl =
+    import.meta.env.VITE_API_URL?.replace(/\/api$/, '') ||
+    'http://localhost:5000';
+
+  // Make sure we don't get double slashes
+  if (imagePath.startsWith('/')) {
+    return `${backendUrl}${imagePath}`;
+  }
+
+  return `${backendUrl}/${imagePath}`;
+};
+
   useEffect(() => {
     if (variant) {
       setFormData({
@@ -55,9 +73,10 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
         image: null
       });
       if (variant.image) {
-        const backendUrl = import.meta.env.VITE_API_URL?.replace(/\/api$/, '') || 'http://localhost:5000';
-        setImagePreview(`${backendUrl}${variant.image}`);
-      }
+          setImagePreview(getImageUrl(variant.image));
+        } else {
+          setImagePreview('');
+        }
     }
   }, [variant]);
 
@@ -364,7 +383,15 @@ const VariantForm: React.FC<VariantFormProps> = ({ variant, products, onClose, o
             {imagePreview && (
               <div className="mt-4">
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Preview:</p>
-                <img src={imagePreview} alt="Preview" className="h-32 w-32 object-cover rounded-lg border border-gray-300 dark:border-gray-600" />
+                <img
+                      src={imagePreview}
+                      alt="Variant preview"
+                      className="h-32 w-32 object-cover rounded-lg border border-gray-300 dark:border-gray-600"
+                      onError={(e) => {
+                        console.error('Failed to load variant image:', imagePreview);
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
               </div>
             )}
           </div>

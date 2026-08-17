@@ -549,6 +549,16 @@ const ProductDetail: React.FC = () => {
                       }}
                     />
 
+                    {
+                      variant.stock <= 0 && (
+                        <div className="absolute inset-0 bg-black/45 flex items-center justify-center pointer-events-none">
+                          <span className="bg-red-600 text-white px-5 py-2.5 rounded-lg font-bold text-sm uppercase tracking-wide shadow-lg">
+                            Out of Stock
+                          </span>
+                        </div>
+                      )
+                    }
+
                     {/* Download button */}
                     <button
                       onClick={
