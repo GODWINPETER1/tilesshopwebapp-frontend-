@@ -5,34 +5,20 @@ import { useCart } from '../context/CartContext';
 const CartPage: React.FC = () => {
   const navigate = useNavigate();
 
-  const {
-    items,
-    loading,
-    error,
-    cartItemCount,
-    updateQuantity,
-    removeFromCart,
-    clearCart,
-  } = useCart();
+  const { items, loading, error, cartItemCount, updateQuantity, removeFromCart, clearCart } = useCart();
 
-  const [updatingItem, setUpdatingItem] =
-    useState<number | null>(null);
+  const [updatingItem, setUpdatingItem] = useState<number | null>(null);
 
-  const [removingItem, setRemovingItem] =
-    useState<number | null>(null);
+  const [removingItem, setRemovingItem] = useState<number | null>(null);
 
-  const [clearingCart, setClearingCart] =
-    useState(false);
+  const [clearingCart, setClearingCart] = useState(false);
 
   // =====================================================
   // Update quantity
   // =====================================================
 
-  const handleUpdateQuantity = async (
-    itemId: number,
-    quantity: number,
-    stock: number
-  ) => {
+  const handleUpdateQuantity = async ( itemId: number, quantity: number, stock: number) => {
+
     if (quantity < 1) {
       return;
     }
@@ -44,15 +30,12 @@ const CartPage: React.FC = () => {
     try {
       setUpdatingItem(itemId);
 
-      await updateQuantity(
-        itemId,
-        quantity
-      );
+      await updateQuantity( itemId, quantity );
+
     } catch (err) {
-      console.error(
-        'Failed to update quantity:',
-        err
-      );
+      
+      console.error('Failed to update quantity:',  err );
+
     } finally {
       setUpdatingItem(null);
     }
