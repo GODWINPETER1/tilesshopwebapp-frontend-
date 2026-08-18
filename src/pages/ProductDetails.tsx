@@ -84,14 +84,12 @@ const ProductDetail: React.FC = () => {
   // =====================================================
 
   const increaseQuantity = (): void => {
-    if (!variant) return;
 
-    setQuantity((current) =>
-      Math.min(current + 1, variant.stock)
-    );
+    setQuantity((current) => current + 1);
 
     setCartSuccess('');
     setCartErrorMessage('');
+
   };
 
   const decreaseQuantity = (): void => {
@@ -115,12 +113,7 @@ const ProductDetail: React.FC = () => {
       return;
     }
 
-    setQuantity(
-      Math.min(
-        Math.max(value, 1),
-        variant.stock
-      )
-    );
+    setQuantity(Math.max(value , 1 ));
 
     setCartSuccess('');
     setCartErrorMessage('');
@@ -131,36 +124,29 @@ const ProductDetail: React.FC = () => {
   // =====================================================
 
   const handleAddToCart = async (): Promise<void> => {
+
     if (!variant) return;
 
-    if (variant.stock <= 0) {
-      setCartErrorMessage(
-        'This product is currently out of stock.'
-      );
-      return;
-    }
+    // if (variant.stock <= 0) {
 
-    if (quantity > variant.stock) {
-      setCartErrorMessage(
-        `Only ${variant.stock} item(s) available in stock.`
-      );
-      return;
-    }
+    //   setCartErrorMessage('This product is currently out of stock.');
+    //   return;
+    // }
+
+    // if (quantity > variant.stock) {
+
+    //   setCartErrorMessage(`Only ${variant.stock} item(s) available in stock.`);
+    //   return;
+
+    // }
 
     try {
+
       setAddingToCart(true);
       setCartSuccess('');
       setCartErrorMessage('');
 
-      /*
-       * The current URL contains variantId.
-       * The variant response already contains productId.
-       */
-      await addToCart(
-        variant.productId,
-        variant.id,
-        quantity
-      );
+      await addToCart( variant.productId, variant.id, quantity );
 
       setCartSuccess(
         `${quantity} item${
@@ -172,10 +158,8 @@ const ProductDetail: React.FC = () => {
       setQuantity(1);
 
     } catch (err: any) {
-      console.error(
-        'Add to cart error:',
-        err
-      );
+
+      console.error('Add to cart error:', err );
 
       setCartErrorMessage(
         err?.message ||
@@ -186,9 +170,6 @@ const ProductDetail: React.FC = () => {
     }
   };
 
-  // =====================================================
-  // Image zoom
-  // =====================================================
 
   const handleImageClick = (): void => {
     setIsZoomed(true);
@@ -482,11 +463,11 @@ const ProductDetail: React.FC = () => {
   const quantityInCart =
     currentCartItem?.quantity || 0;
 
-  const remainingStock =
-    Math.max(
-      variant.stock - quantityInCart,
-      0
-    );
+  // const remainingStock =
+  //   Math.max(
+  //     variant.stock - quantityInCart,
+  //     0
+  //   );
 
   // =====================================================
   // Render
@@ -752,11 +733,9 @@ const ProductDetail: React.FC = () => {
                     <input
                       type="number"
                       min={1}
-                      max={remainingStock || variant.stock}
+                      
                       value={quantity}
-                      onChange={
-                        handleQuantityChange
-                      }
+                      onChange={ handleQuantityChange }
                       className="w-16 h-11 border-y border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-center text-gray-800 dark:text-white outline-none"
                     />
 
@@ -765,11 +744,7 @@ const ProductDetail: React.FC = () => {
                       onClick={
                         increaseQuantity
                       }
-                      disabled={
-                        quantity >=
-                        (remainingStock ||
-                          variant.stock)
-                      }
+                      
                       className="w-11 h-11 border border-gray-300 dark:border-gray-600 rounded-r-lg text-xl text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       +
@@ -820,7 +795,7 @@ const ProductDetail: React.FC = () => {
                     handleAddToCart
                   }
                   disabled={
-                    variant.stock <= 0 ||
+        
                     addingToCart ||
                     cartLoading
                   }
@@ -831,9 +806,7 @@ const ProductDetail: React.FC = () => {
                       <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2" />
                       Adding...
                     </>
-                  ) : variant.stock <= 0 ? (
-                    'Out of Stock'
-                  ) : (
+                  )  : (
                     'Add to Cart'
                   )}
                 </button>
