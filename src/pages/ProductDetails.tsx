@@ -752,11 +752,11 @@ const ProductDetail: React.FC = () => {
 
                   </div>
 
-                  {quantityInCart > 0 && (
+                  {/* {quantityInCart > 0 && (
                     <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                       {remainingStock} remaining available to add.
                     </p>
-                  )}
+                  )} */}
 
                 </div>
               )}
